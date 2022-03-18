@@ -8,6 +8,9 @@ public class Owners {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long owner_id;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "owner_id")
+//    private Owners owner;
     /** The surname of the car owner. */
     @Column(length=60, nullable = false, updatable = false) //Be sure to set max length & NOT NULL where appropriate
     private String last_name;
