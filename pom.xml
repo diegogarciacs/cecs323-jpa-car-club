@@ -62,7 +62,8 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>csulb.cecs323.app.CarClub</mainClass>
+							<mainClass>JPA_Books</mainClass>
+<!--							csulb.cecs323.app.JPA_Books-->
 						</manifest>
 					</archive>
 				</configuration>
