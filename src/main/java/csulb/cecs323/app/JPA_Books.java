@@ -71,7 +71,7 @@ public class JPA_Books {
 
       LOGGER.fine("Begin of Transaction");
       EntityTransaction tx = manager.getTransaction();
-      
+
 
       tx.begin();
 //      // List of owners that I want to persist.  I could just as easily done this with the seed-data.sql
