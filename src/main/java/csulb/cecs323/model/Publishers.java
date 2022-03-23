@@ -18,12 +18,10 @@ public class Publishers {
     @Column(nullable = false, length = 24, unique = true)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IBSN", nullable = false)
-    private Books books;
-
+    //Default Constructor
     public Publishers() {};
 
+    //Overloaded Constructor
     public Publishers(String name, String phone, String email){
         this.name = name;
         this.phone = phone;
@@ -31,5 +29,28 @@ public class Publishers {
     }
 
 
+    //Getters and Setters
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
