@@ -1,7 +1,19 @@
 package csulb.cecs323.model;
-import javax.persistence.*;
+
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Id;
+import javax.persistence.Column;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name = "books_ck_01", columnNames = {"title", "publisher_name"}),
+        @UniqueConstraint(name = "books_ck_02", columnNames = {"title", "authoring_entity_name"})})
 public class Books {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
