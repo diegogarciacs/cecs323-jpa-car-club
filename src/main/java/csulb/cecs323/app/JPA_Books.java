@@ -13,12 +13,12 @@
 package csulb.cecs323.app;
 
 // Import all of the entity classes that we have written for this application.
-//import csulb.cecs323.model.*;
-
+import csulb.cecs323.model.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -52,7 +52,8 @@ public class JPA_Books {
    /**
     * The constructor for the JPA Book class.  All that it does is stash the provided EntityManager
     * for use later in the application.
-    * @param manager    The EntityManager that we will use.
+    *
+    * @param manager The EntityManager that we will use.
     */
    public JPA_Books(EntityManager manager) {
       this.entityManager = manager;
@@ -63,9 +64,39 @@ public class JPA_Books {
       EntityManagerFactory factory = Persistence.createEntityManagerFactory("JPA_Books");
       EntityManager manager = factory.createEntityManager();
       // Create an instance of CarClub and store our new EntityManager as an instance variable.
-      JPA_Books carclub = new JPA_Books(manager);
+      JPA_Books books_manager = new JPA_Books(manager);
 
+      //BEGINNING OF CONSOLE OUTPUT
+      Scanner sc = new Scanner(System.in);
+      printMenu();
+      String answer = sc.nextLine();
+      answer = processMenuInput(answer); //Validates user input
 
+      String selection;
+      String object_answer;
+      if(answer.equalsIgnoreCase("1")) {
+         addNewObjectMenu();
+         object_answer = sc.nextLine();
+         object_answer = processaddNewObjectMenu(object_answer);
+      }
+      else if(answer.equalsIgnoreCase("2")){
+         listInformationMenu();
+         object_answer = sc.nextLine();
+         object_answer = processListInformationMenu(object_answer);
+      }
+      else if(answer.equalsIgnoreCase("3")){
+         System.out.println("Which book would you like to delete?");
+         selection = sc.nextLine();
+      }
+      else if(answer.equalsIgnoreCase("4")){
+         System.out.println("Which book would you like to update?");
+         selection = sc.nextLine();
+      }
+      else if(answer.equalsIgnoreCase("5")){
+         listPrimaryKeysMenu();
+         object_answer = sc.nextLine();
+         object_answer = processListPrimaryKeysMenu(object_answer);
+      }
       // Any changes to the database need to be done within a transaction.
       // See: https://en.wikibooks.org/wiki/Java_Persistence/Transactions
 
@@ -92,11 +123,12 @@ public class JPA_Books {
 
    /**
     * Create and persist a list of objects to the database.
-    * @param entities   The list of entities to persist.  These can be any object that has been
-    *                   properly annotated in JPA and marked as "persistable."  I specifically
-    *                   used a Java generic so that I did not have to write this over and over.
+    *
+    * @param entities The list of entities to persist.  These can be any object that has been
+    *                 properly annotated in JPA and marked as "persistable."  I specifically
+    *                 used a Java generic so that I did not have to write this over and over.
     */
-   public <E> void createEntity(List <E> entities) {
+   public <E> void createEntity(List<E> entities) {
       for (E next : entities) {
          LOGGER.info("Persisting: " + next);
          // Use the CarClub entityManager instance variable to get our EntityManager.
@@ -116,8 +148,9 @@ public class JPA_Books {
     * same name, as the string that you pass in.  To create a new Cars instance, you need to pass
     * in an instance of auto_body_styles to satisfy the foreign key constraint, not just a string
     * representing the name of the style.
-    * @param name       The name of the autobody style that you are looking for.
-    * @return           The auto_body_styles instance corresponding to that style name.
+    *
+    * //@param The name of the autobody style that you are looking for.
+    * @return The auto_body_styles instance corresponding to that style name.
     */
 //   public auto_body_styles getStyle (String name) {
 //      // Run the native query that we defined in the auto_body_styles entity to find the right style.
@@ -131,4 +164,134 @@ public class JPA_Books {
 //         return styles.get(0);
 //      }
 //   }// End of the getStyle method
-} // End of CarClub class
+   public static void printMenu() {
+      System.out.println("What would you like to do?");
+      System.out.println("1. Add a new object");
+      System.out.println("2. List all information about an object");
+      System.out.println("3. Delete a Book");
+      System.out.println("4. Update a Book");
+      System.out.println("5. List the primary keys of certain entities");
+   }
+
+   public static void addNewObjectMenu() {
+      System.out.println("What new authoring instance would you like to commit?");
+      System.out.println("1. Writing Group\n2. Individual Author\n3. Ad Hoc Team\n4. Ad Hoc Team Member (Individual Author)");
+   }
+
+   public static void listInformationMenu() {
+      System.out.println("Which object would you like to list information about?");
+      System.out.println("1. Publisher");
+      System.out.println("2. Book");
+      System.out.println("3. Writing Group");
+   }
+
+   public static void listPrimaryKeysMenu() {
+      System.out.println("Which primary keys would you like to print?");
+      System.out.println("1. Publishers");
+      System.out.println("2. Books");
+      System.out.println("3. Writing Group");
+      System.out.println("4. Individual Author");
+      System.out.println("5. Ad Hoc Team");
+      System.out.println("6. Ad Hoc Team Member");
+   }
+
+   public static String processMenuInput(String answer) {
+      boolean flag = false;
+      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5")) {
+         flag = true;
+      } else {
+         while (flag == false) {
+            System.out.println();
+            System.out.println("Not a valid answer.");
+            System.out.println();
+            Scanner sc = new Scanner(System.in);
+            printMenu();
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5")) {
+               flag = true;
+            }
+            else {
+               flag = false;
+            }
+         }
+      }
+      return answer;
+   }
+
+   public static String processaddNewObjectMenu(String answer) {
+      boolean flag = false;
+      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+              | answer.equalsIgnoreCase("4")) {
+         flag = true;
+      } else {
+         while (flag == false) {
+            System.out.println();
+            System.out.println("Not a valid answer.");
+            System.out.println();
+            Scanner sc = new Scanner(System.in);
+            addNewObjectMenu();
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+                    | answer.equalsIgnoreCase("4")) {
+               flag = true;
+            }
+            else {
+               flag = false;
+            }
+         }
+      }
+      return answer;
+   }
+
+   public static String processListInformationMenu(String answer) {
+      boolean flag = false;
+      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")) {
+         flag = true;
+      } else {
+         while (flag == false) {
+            System.out.println();
+            System.out.println("Not a valid answer.");
+            System.out.println();
+            Scanner sc = new Scanner(System.in);
+            listInformationMenu();
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")) {
+               flag = true;
+            }
+            else {
+               flag = false;
+            }
+         }
+      }
+      return answer;
+   }
+
+   public static String processListPrimaryKeysMenu(String answer){
+      boolean flag = false;
+      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
+         flag = true;
+      } else {
+         while (flag == false) {
+            System.out.println();
+            System.out.println("Not a valid answer.");
+            System.out.println();
+            Scanner sc = new Scanner(System.in);
+            listPrimaryKeysMenu();
+            answer = sc.nextLine();
+            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
+                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
+               flag = true;
+            }
+            else {
+               flag = false;
+            }
+         }
+      }
+      return answer;
+   }
+}// End of CarClub class
+
+
