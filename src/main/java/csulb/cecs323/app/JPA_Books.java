@@ -78,8 +78,6 @@ public class JPA_Books {
          addNewObjectMenu();
          object_answer = sc.nextLine();
          object_answer = processaddNewObjectMenu(object_answer);
-         List<String> new_authoring_instance = new ArrayList<String>();
-         new_authoring_instance = gatherAuthoringInstanceData(object_answer, new_authoring_instance);
       }
       else if(answer.equalsIgnoreCase("2")){
          listInformationMenu();
@@ -294,43 +292,6 @@ public class JPA_Books {
       }
       return answer;
    }
-
-   public static List<String> gatherAuthoringInstanceData(String object_answer, List<String> authoring_instance) {
-      Scanner sc = new Scanner(System.in);
-      List<String> authoring_entity = new ArrayList<String>();
-
-      System.out.println("Let us start with the authoring entity data itself: ");
-      System.out.println("Please enter a name: ");
-      String name = sc.nextLine();
-      System.out.println("Please enter an email: ");
-      String email = sc.nextLine();
-
-      String authoring_entity_type = "";
-
-      if(object_answer.equalsIgnoreCase("1")){
-         System.out.println("You have chosen a new Writing Group.");
-         authoring_entity_type = "Writing Group";
-         
-      } else if (object_answer.equalsIgnoreCase("2")) {
-         System.out.println("You have chosen a new Individual Author.");
-         authoring_entity_type = "Individual Author";
-      } else if (object_answer.equalsIgnoreCase("3")) {
-         System.out.println("You have chosen a new Ad Hoc Team.");
-         authoring_entity_type = "Ad Hoc Team";
-      } else {
-         System.out.println("You have chosen a new Ad Hoc Team Member.");
-         authoring_entity_type = "Ad Hoc Team Member";
-      }
-      authoring_entity.add(name);
-      authoring_entity.add(email);
-      authoring_entity.add(authoring_entity_type);
-
-
-
-
-      return authoring_instance;
-   }
-
 }// End of CarClub class
 
 
