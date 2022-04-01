@@ -68,37 +68,38 @@ public class JPA_Books {
 
       //BEGINNING OF CONSOLE OUTPUT
       Scanner sc = new Scanner(System.in);
-      printMenu();
-      String answer = sc.nextLine();
-      answer = processMenuInput(answer); //Validates user input
+       //Validates user input
+      boolean circuit = true;
+      while(circuit == true) {
+         printMenu();
+         String answer = sc.nextLine();
+         answer = processMenuInput(answer);
+         String selection;
+         String object_answer;
+         if (answer.equalsIgnoreCase("1")) {
+            addNewObjectMenu();
+            object_answer = sc.nextLine();
+            object_answer = processaddNewObjectMenu(object_answer);
+            List<String> new_authoring_instance = new ArrayList<String>();
+            new_authoring_instance = gatherAuthoringInstanceData(object_answer, new_authoring_instance);
+         } else if (answer.equalsIgnoreCase("2")) {
+            listInformationMenu();
+            object_answer = sc.nextLine();
+            object_answer = processListInformationMenu(object_answer);
+         } else if (answer.equalsIgnoreCase("3")) {
+            System.out.println("Which book would you like to delete?");
+            selection = sc.nextLine();
+         } else if (answer.equalsIgnoreCase("4")) {
+            System.out.println("Which book would you like to update?");
+            selection = sc.nextLine();
+         } else if (answer.equalsIgnoreCase("5")) {
+            listPrimaryKeysMenu();
+            object_answer = sc.nextLine();
+            object_answer = processListPrimaryKeysMenu(object_answer);
+         }
 
-      String selection;
-      String object_answer;
-      if(answer.equalsIgnoreCase("1")) {
-         addNewObjectMenu();
-         object_answer = sc.nextLine();
-         object_answer = processaddNewObjectMenu(object_answer);
-         List<String> new_authoring_instance = new ArrayList<String>();
-         new_authoring_instance = gatherAuthoringInstanceData(object_answer, new_authoring_instance);
-      }
-      else if(answer.equalsIgnoreCase("2")){
-         listInformationMenu();
-         object_answer = sc.nextLine();
-         object_answer = processListInformationMenu(object_answer);
-      }
-      else if(answer.equalsIgnoreCase("3")){
-         System.out.println("Which book would you like to delete?");
-         selection = sc.nextLine();
-      }
-      else if(answer.equalsIgnoreCase("4")){
-         System.out.println("Which book would you like to update?");
-         selection = sc.nextLine();
-      }
-      else if(answer.equalsIgnoreCase("5")){
-         listPrimaryKeysMenu();
-         object_answer = sc.nextLine();
-         object_answer = processListPrimaryKeysMenu(object_answer);
-      }
+         circuit = keepGoing();
+      } //end of while loop
       // Any changes to the database need to be done within a transaction.
       // See: https://en.wikibooks.org/wiki/Java_Persistence/Transactions
 
@@ -331,6 +332,30 @@ public class JPA_Books {
       return authoring_instance;
    }
 
+
+   public static boolean keepGoing() {
+      Scanner sc = new Scanner(System.in);
+
+      System.out.println("Would you like to keep going? (y/n)");
+      String answer = sc.nextLine();
+      boolean flag = false;
+      boolean keep_going = true;
+      while(flag == false) {
+
+
+         if (answer.equalsIgnoreCase("y")) {
+            flag = true;
+            keep_going = true;
+         } else if (answer.equalsIgnoreCase("n")) {
+            flag = true;
+            keep_going = false;
+         } else {
+            System.out.println("Bad answer. Please enter either 'y' or 'n'");
+            answer = sc.nextLine();
+         }
+      }
+      return keep_going;
+   }
 }// End of CarClub class
 
 
