@@ -14,6 +14,8 @@ package csulb.cecs323.app;
 
 // Import all of the entity classes that we have written for this application.
 import csulb.cecs323.model.*;
+import org.apache.derby.impl.store.raw.log.Scan;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -80,22 +82,32 @@ public class JPA_Books {
             addNewObjectMenu();
             object_answer = sc.nextLine();
             object_answer = processaddNewObjectMenu(object_answer);
-            List<String> new_authoring_instance = new ArrayList<String>();
-            new_authoring_instance = gatherAuthoringInstanceData(object_answer, new_authoring_instance);
+            if(object_answer.equalsIgnoreCase("1") | object_answer.equalsIgnoreCase("2") |
+            object_answer.equalsIgnoreCase("3") | object_answer.equalsIgnoreCase("4")) {
+               List<String> new_authoring_instance = new ArrayList<String>();
+               new_authoring_instance = gatherAuthoringInstanceData(object_answer, new_authoring_instance);
+               commitAuthoringInstance(object_answer, new_authoring_instance);
+            } else if(object_answer.equalsIgnoreCase("5") | object_answer.equalsIgnoreCase("6")) {
+               commitOtherObject(object_answer);
+            }
          } else if (answer.equalsIgnoreCase("2")) {
             listInformationMenu();
             object_answer = sc.nextLine();
             object_answer = processListInformationMenu(object_answer);
+            listObjectInformation(object_answer);
          } else if (answer.equalsIgnoreCase("3")) {
             System.out.println("Which book would you like to delete?");
             selection = sc.nextLine();
+            //make sure book is in database
          } else if (answer.equalsIgnoreCase("4")) {
             System.out.println("Which book would you like to update?");
             selection = sc.nextLine();
+            //make sure book is in database
          } else if (answer.equalsIgnoreCase("5")) {
             listPrimaryKeysMenu();
             object_answer = sc.nextLine();
             object_answer = processListPrimaryKeysMenu(object_answer);
+            listPrimaryKeys(object_answer);
          }
 
          circuit = keepGoing();
@@ -177,8 +189,15 @@ public class JPA_Books {
    }
 
    public static void addNewObjectMenu() {
-      System.out.println("What new authoring instance would you like to commit?");
-      System.out.println("1. Writing Group\n2. Individual Author\n3. Ad Hoc Team\n4. Ad Hoc Team Member (Individual Author)");
+      System.out.println("What new object would you like to commit?");
+      System.out.println("Authoring Entities:");
+      System.out.println("1. Writing Group");
+      System.out.println("2. Individual Author");
+      System.out.println("3. Ad Hoc Team");
+      System.out.println("4. Ad Hoc Team Member (Individual Author)");
+      System.out.println("Other objects: ");
+      System.out.println("5. Publisher");
+      System.out.println("6. Book");
    }
 
    public static void listInformationMenu() {
@@ -226,7 +245,7 @@ public class JPA_Books {
    public static String processaddNewObjectMenu(String answer) {
       boolean flag = false;
       if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-              | answer.equalsIgnoreCase("4")) {
+              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
          flag = true;
       } else {
          while (flag == false) {
@@ -237,7 +256,7 @@ public class JPA_Books {
             addNewObjectMenu();
             answer = sc.nextLine();
             if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-                    | answer.equalsIgnoreCase("4")) {
+                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
                flag = true;
             }
             else {
@@ -311,7 +330,7 @@ public class JPA_Books {
       if(object_answer.equalsIgnoreCase("1")){
          System.out.println("You have chosen a new Writing Group.");
          authoring_entity_type = "Writing Group";
-         
+
       } else if (object_answer.equalsIgnoreCase("2")) {
          System.out.println("You have chosen a new Individual Author.");
          authoring_entity_type = "Individual Author";
@@ -341,8 +360,6 @@ public class JPA_Books {
       boolean flag = false;
       boolean keep_going = true;
       while(flag == false) {
-
-
          if (answer.equalsIgnoreCase("y")) {
             flag = true;
             keep_going = true;
@@ -356,6 +373,111 @@ public class JPA_Books {
       }
       return keep_going;
    }
+
+   public static void commitAuthoringInstance(String object_answer, List<String> new_authoring_instance) {
+      Scanner sc = new Scanner(System.in);
+      String authoring_entity_type;
+
+      if(object_answer.equalsIgnoreCase("1")){
+         authoring_entity_type = "Writing Group";
+         System.out.println("Please give me a head writer: ");
+         String head_writer = sc.nextLine();
+         System.out.println("Please give me a year (integer): ");
+         String year_formed = sc.nextLine();
+         new_authoring_instance.add(head_writer);
+         new_authoring_instance.add(year_formed);
+         //commit list
+      } else if (object_answer.equalsIgnoreCase("2")) {
+         authoring_entity_type = "Individual Author";
+         //commit list
+      } else if (object_answer.equalsIgnoreCase("3")) {
+         authoring_entity_type = "Ad Hoc Team";
+         System.out.println("Please give me the Ad Hoc Teams' email: ");
+         String ad_hoc_teams_email = sc.nextLine();
+         //commit list
+      } else if (object_answer.equalsIgnoreCase("4")) {
+         authoring_entity_type = "Ad Hoc Team Member";
+         System.out.println("Which Ad Hoc Team would you like to add an author to?: ");
+         String ad_hoc_team = sc.nextLine();
+         //check if ad hoc team exists
+         System.out.println("Which author would you like to add to the team?\n" +
+                 "Give the email: ");
+         String individual_author_email = sc.nextLine();
+         //check if individual author exists
+         //put individual author into the team
+      }
+   }//end method
+
+   public static void commitOtherObject(String object_answer){
+      List<String> information = new ArrayList<String>();
+      Scanner sc = new Scanner(System.in);
+      if(object_answer.equalsIgnoreCase("5")){
+         System.out.println("What is the publisher's name?: ");
+         String publisher_name = sc.nextLine();
+         System.out.println("What is the publisher's phone number?: ");
+         String publisher_phone = sc.nextLine();
+         System.out.println("What is the publisher's email?: ");
+         String publisher_email = sc.nextLine();
+         information.add(publisher_name);
+         information.add(publisher_phone);
+         information.add(publisher_email);
+         //commit list
+      } else if(object_answer.equalsIgnoreCase("6")){
+         System.out.println("What is the book publisher's name?: ");
+         String book_publisher = sc.nextLine();
+         //check if publisher is in database
+         System.out.println("What is the authoring entity email for the book?: ");
+         String book_entity_email = sc.nextLine();
+         //check if authoring entity is in database
+         System.out.println("What is the book's ISBN?: ");
+         String book_ISBN = sc.nextLine();
+         System.out.println("What is the book's title?: ");
+         String book_title = sc.nextLine();
+         information.add(book_publisher);
+         information.add(book_entity_email);
+         information.add(book_ISBN);
+         information.add(book_title);
+         //commit list
+      }
+   }//end method
+
+   public static void listObjectInformation(String object_answer) {
+      Scanner sc = new Scanner(System.in);
+      if(object_answer.equalsIgnoreCase("1")){
+         System.out.println("Which publisher would you like to list? Give the name: ");
+         String publisher = sc.nextLine();
+         //make sure publisher is in the database
+         //list out the information
+      } else if (object_answer.equalsIgnoreCase("2")) {
+         System.out.println("Which Book would you like to list? Give the ISBN: ");
+         String book = sc.nextLine();
+         //make sure book is in database
+         //list out the information
+      } else if (object_answer.equalsIgnoreCase("3")) {
+         System.out.println("Which Writing Group would you like to list? Give the email: ");
+         String writing_group = sc.nextLine();
+         //make sure writing group is in the database
+         //list out the information
+      }
+   }//end method
+
+   public static void listPrimaryKeys(String object_answer) {
+      Scanner sc = new Scanner(System.in);
+      if(object_answer.equalsIgnoreCase("1")){
+         //list primary keys of publishers
+      } else if (object_answer.equalsIgnoreCase("2")){
+         //list primary keys of books
+      } else if (object_answer.equalsIgnoreCase("3")){
+         //list primary keys of writing groups
+      } else if (object_answer.equalsIgnoreCase("4")){
+         //list primary keys of individual author
+      } else if (object_answer.equalsIgnoreCase("5")){
+         //list primary keys of ad hoc teams
+      } else if (object_answer.equalsIgnoreCase("6")){
+         //list primary keys of ad hoc team members
+      }
+   }//end method
+
 }// End of CarClub class
 
 
