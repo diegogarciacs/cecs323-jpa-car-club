@@ -14,11 +14,9 @@ package csulb.cecs323.app;
 
 // Import all of the entity classes that we have written for this application.
 import csulb.cecs323.model.*;
-import org.apache.derby.impl.store.raw.log.Scan;
 
 import javax.persistence.*;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,8 +32,8 @@ import java.util.logging.Logger;
 public class JPA_Books {
    /**
     * You will likely need the entityManager in a great many functions throughout your application.
-    * Rather than make this a global variable, we will make it an instance variable within the CarClub
-    * class, and create an instance of CarClub in the main.
+    * Rather than make this a global variable, we will make it an instance variable within the JPABook
+    * class, and create an instance of JPABook in the main.
     */
    private EntityManager entityManager;
 
@@ -77,8 +75,8 @@ public class JPA_Books {
                  manager.createQuery("SELECT w FROM Writing_Group w ", Writing_Group.class).getResultList();
          List<Individual_Author> individualAuthors = manager.createQuery("SELECT ia FROM Individual_Author ia",
                  Individual_Author.class).getResultList();
-         List<Ad_Hoc_Teams> adHocTeamsList =
-                 manager.createQuery("SELECT aT FROM Ad_Hoc_Teams aT", Ad_Hoc_Teams.class).getResultList();
+         List<Ad_Hoc_Team> adHocTeamsList =
+                 manager.createQuery("SELECT aT FROM Ad_Hoc_Team aT", Ad_Hoc_Team.class).getResultList();
          List<Publishers> publishersList =
                  manager.createQuery("SELECT p FROM Publishers p",Publishers.class).getResultList();
          printMenu();
@@ -126,9 +124,8 @@ public class JPA_Books {
             int object_answer = getIntRange(1,6);
             listPrimaryKeys(object_answer);
          }
-
-
-         circuit = keepGoing();
+         System.out.println("Would you like to keep going? (y/n)");
+         circuit = getYesNo();
          books_manager.createEntity(writingGroupsList);
          books_manager.createEntity(adHocTeamsList);
          books_manager.createEntity(publishersList);
@@ -151,12 +148,12 @@ public class JPA_Books {
       publishersList.add(new Publishers(name,phone,email));
    }
 
-   private static void createAdHocTeam(List<Ad_Hoc_Teams> adHocTeams) {
+   private static void createAdHocTeam(List<Ad_Hoc_Team> adHocTeams) {
       System.out.println("Please input the name of the ad hoc team.");
       String name = getString();
       System.out.println("Please input the email of the ad hoc team.");
       String email = getString();
-      adHocTeams.add(new Ad_Hoc_Teams(name,email));
+      adHocTeams.add(new Ad_Hoc_Team(name,email));
    }
 
    private static void createIndividualAuthors(List<Individual_Author> individualAuthors) {
@@ -177,7 +174,7 @@ public class JPA_Books {
    public <E> void createEntity(List<E> entities) {
       for (E next : entities) {
          LOGGER.info("Persisting: " + next);
-         // Use the CarClub entityManager instance variable to get our EntityManager.
+         // Use the JPABooks entityManager instance variable to get our EntityManager.
          this.entityManager.persist(next);
       }
 
@@ -258,25 +255,13 @@ public class JPA_Books {
       System.out.println("5. List the primary keys of certain entities");
    }
 
+   /**
+    * Displays list of objects to be added to database.
+    */
    public static void addNewObjectMenu() {
-
-
-      System.out.println("What new object would you like to commit?");
-      System.out.println("Authoring Entities:");
-      System.out.println("1. Writing Group");
-      System.out.println("2. Individual Author");
-      System.out.println("3. Ad Hoc Team");
-      System.out.println("4. Ad Hoc Team Member (Individual Author)");
-      System.out.println("Other objects: ");
-      System.out.println("5. Publisher");
-      System.out.println("6. Book");
-
-
       System.out.println("What object would you like to add?");
       System.out.println("1. Writing Group\n2. Individual Author\n3. Ad Hoc Team\n4. Ad Hoc Team Member (Individual " +
               "Author)\n5. Add a new publisher.\n6. Add a new book.");
-
-
    }
 
    public static void listInformationMenu() {
@@ -322,25 +307,6 @@ public class JPA_Books {
       return answer;
    }
 
-//   public static String processaddNewObjectMenu(String answer) {
-//      boolean flag = false;
-//      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
-//         flag = true;
-//      } else {
-//         while (flag == false) {
-//            System.out.println();
-//            System.out.println("Not a valid answer.");
-//            System.out.println();
-//            Scanner sc = new Scanner(System.in);
-//            addNewObjectMenu();
-//            answer = sc.nextLine();
-//            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
-//               flag = true;
-//            }
-//            else {
-//               flag = false;
 
 
    public static int getIntRange( int low, int high ) {
@@ -363,224 +329,27 @@ public class JPA_Books {
       return input;
    }
 
-//   public static String processMenuInput(String answer) {
-//      boolean flag = false;
-//      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
-//         flag = true;
-//      } else {
-//         while (flag == false) {
-//            System.out.println();
-//            System.out.println("Not a valid answer.");
-//            System.out.println();
-//            Scanner sc = new Scanner(System.in);
-//            printMenu();
-//            answer = sc.nextLine();
-//            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5")) {
-//               flag = true;
-//            }
-//            else {
-//               flag = false;
-//            }
-//         }
-//      }
-//      return answer;
-//   }
 
-//   public static String processaddNewObjectMenu(String answer) {
-//      boolean flag = false;
-//      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//              | answer.equalsIgnoreCase("4")) {
-//         flag = true;
-//      } else {
-//         while (flag == false) {
-//            System.out.println();
-//            System.out.println("Not a valid answer.");
-//            System.out.println();
-//            Scanner sc = new Scanner(System.in);
-//            addNewObjectMenu();
-//            answer = sc.nextLine();
-//            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//                    | answer.equalsIgnoreCase("4")) {
-//               flag = true;
-//            }
-//            else {
-//               flag = false;
-//            }
-//         }
-//      }
-//      return answer;
-//   }
-
-//   public static String processListInformationMenu(String answer) {
-//      boolean flag = false;
-//      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")) {
-//         flag = true;
-//      } else {
-//         while (flag == false) {
-//            System.out.println();
-//            System.out.println("Not a valid answer.");
-//            System.out.println();
-//            Scanner sc = new Scanner(System.in);
-//            listInformationMenu();
-//            answer = sc.nextLine();
-//            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")) {
-//               flag = true;
-//            }
-//            else {
-//               flag = false;
-//            }
-//         }
-//      }
-//      return answer;
-//   }
-
-//   public static String processListPrimaryKeysMenu(String answer){
-//      boolean flag = false;
-//      if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//              | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
-//         flag = true;
-//      } else {
-//         while (flag == false) {
-//            System.out.println();
-//            System.out.println("Not a valid answer.");
-//            System.out.println();
-//            Scanner sc = new Scanner(System.in);
-//            listPrimaryKeysMenu();
-//            answer = sc.nextLine();
-//            if (answer.equalsIgnoreCase("1") | answer.equalsIgnoreCase("2") | answer.equalsIgnoreCase("3")
-//                    | answer.equalsIgnoreCase("4") | answer.equalsIgnoreCase("5") | answer.equalsIgnoreCase("6")) {
-//               flag = true;
-//            }
-//            else {
-//               flag = false;
-//            }
-//         }
-//      }
-//      return answer;
-//   }
-
-//   public static List<String> gatherAuthoringInstanceData(int object_answer, List<Authoring_Entity> authoring_instance) {
-//      Scanner sc = new Scanner(System.in);
-//      List<Authoring_Entity> authoring_entity = new ArrayList<Authoring_Entity>();
-//
-//      System.out.println("Let us start with the authoring entity data itself: ");
-//      System.out.println("Please enter a name: ");
-//      String name = sc.nextLine();
-//      System.out.println("Please enter an email: ");
-//      String email = sc.nextLine();
-//
-//      String authoring_entity_type = "";
-//
-//      if(object_answer == 1){
-//         System.out.println("You have chosen a new Writing Group.");
-//         authoring_entity_type = "Writing Group";
-//      } else if (object_answer == 2) {
-//         System.out.println("You have chosen a new Individual Author.");
-//         authoring_entity_type = "Individual Author";
-//      } else if (object_answer == 3) {
-//         System.out.println("You have chosen a new Ad Hoc Team.");
-//         authoring_entity_type = "Ad Hoc Team";
-//      } else if (object_answer == 4){
-//         System.out.println("You have chosen a new Ad Hoc Team Member.");
-//         authoring_entity_type = "Ad Hoc Team Member";
-//      }
-//      authoring_instance.add(new Authoring_Entity(name,email));
-//
-//
-//      return authoring_instance;
-//   }
-
-
-   public static boolean keepGoing() {
-      Scanner sc = new Scanner(System.in);
-
-      System.out.println("Would you like to keep going? (y/n)");
-      String answer = sc.nextLine();
-      boolean flag = false;
-      boolean keep_going = true;
-      while(flag == false) {
-         if (answer.equalsIgnoreCase("y")) {
-            flag = true;
-            keep_going = true;
-         } else if (answer.equalsIgnoreCase("n")) {
-            flag = true;
-            keep_going = false;
+   /**
+    * Takes in a yes/no from the user.
+    * @return true if yes, false if no.
+    */
+   public static boolean getYesNo(){
+      boolean valid = false;
+      while( !valid ) {
+         String s = getString();
+         if( s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y") ) {
+            return true;
+         } else if( s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n") ) {
+            return false;
          } else {
-            System.out.println("Bad answer. Please enter either 'y' or 'n'");
-            answer = sc.nextLine();
+            System.out.println( "Invalid Input." );
          }
       }
-      return keep_going;
+      return false;
    }
 
-//   public static void commitAuthoringInstance(String object_answer, List<String> new_authoring_instance) {
-//      Scanner sc = new Scanner(System.in);
-//      String authoring_entity_type;
-//
-//      if(object_answer.equalsIgnoreCase("1")){
-//         authoring_entity_type = "Writing Group";
-//         System.out.println("Please give me a head writer: ");
-//         String head_writer = sc.nextLine();
-//         System.out.println("Please give me a year (integer): ");
-//         String year_formed = sc.nextLine();
-//         new_authoring_instance.add(head_writer);
-//         new_authoring_instance.add(year_formed);
-//         //commit list
-//      } else if (object_answer.equalsIgnoreCase("2")) {
-//         authoring_entity_type = "Individual Author";
-//         //commit list
-//      } else if (object_answer.equalsIgnoreCase("3")) {
-//         authoring_entity_type = "Ad Hoc Team";
-//         System.out.println("Please give me the Ad Hoc Teams' email: ");
-//         String ad_hoc_teams_email = sc.nextLine();
-//         //commit list
-//      } else if (object_answer.equalsIgnoreCase("4")) {
-//         authoring_entity_type = "Ad Hoc Team Member";
-//         System.out.println("Which Ad Hoc Team would you like to add an author to?: ");
-//         String ad_hoc_team = sc.nextLine();
-//         //check if ad hoc team exists
-//         System.out.println("Which author would you like to add to the team?\n" +
-//                 "Give the email: ");
-//         String individual_author_email = sc.nextLine();
-//         //check if individual author exists
-//         //put individual author into the team
-//      }
-//   }//end method
 
-//   public static void commitOtherObject(String object_answer){
-//      List<String> information = new ArrayList<String>();
-//      Scanner sc = new Scanner(System.in);
-//      if(object_answer.equalsIgnoreCase("5")){
-//         System.out.println("What is the publisher's name?: ");
-//         String publisher_name = sc.nextLine();
-//         System.out.println("What is the publisher's phone number?: ");
-//         String publisher_phone = sc.nextLine();
-//         System.out.println("What is the publisher's email?: ");
-//         String publisher_email = sc.nextLine();
-//         information.add(publisher_name);
-//         information.add(publisher_phone);
-//         information.add(publisher_email);
-//         //commit list
-//      } else if(object_answer.equalsIgnoreCase("6")){
-//         System.out.println("What is the book publisher's name?: ");
-//         String book_publisher = sc.nextLine();
-//         //check if publisher is in database
-//         System.out.println("What is the authoring entity email for the book?: ");
-//         String book_entity_email = sc.nextLine();
-//         //check if authoring entity is in database
-//         System.out.println("What is the book's ISBN?: ");
-//         String book_ISBN = sc.nextLine();
-//         System.out.println("What is the book's title?: ");
-//         String book_title = sc.nextLine();
-//         information.add(book_publisher);
-//         information.add(book_entity_email);
-//         information.add(book_ISBN);
-//         information.add(book_title);
-//         //commit list
-//      }
-//   }//end method
 
    public static void listObjectInformation(int object_answer) {
       Scanner sc = new Scanner(System.in);

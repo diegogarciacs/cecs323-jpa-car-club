@@ -19,8 +19,8 @@ import java.util.Set;
 public class Individual_Author extends Authoring_Entity
 {
 
-    @ManyToMany(mappedBy = "authors")
-    Set<Ad_Hoc_Teams> ad_hoc_teams;
+    @ManyToMany
+    Set<Ad_Hoc_Team> ad_hoc_teams;
 
     public Individual_Author() {};
 

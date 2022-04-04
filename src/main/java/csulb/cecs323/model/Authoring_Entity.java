@@ -20,7 +20,6 @@ public abstract class Authoring_Entity {
         this.email = email;
     }
 
-    //need an inheritance annotation inide this
     //Getters and Setters
     public String getName() {
         return name;
