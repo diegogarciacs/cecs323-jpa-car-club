@@ -37,5 +37,9 @@ public abstract class Authoring_Entity {
         this.email = email;
     }
 
+    @Override
+    public String toString(){
+        return ("Author: "+getName() + "\nEmail: "+ getEmail()+"\n");
+    }
 
 }

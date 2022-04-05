@@ -26,7 +26,7 @@ public class Writing_Group extends Authoring_Entity
 
     public Writing_Group(String name, String email, String head_writer, int year_formed)
     {
-        super(email,name);
+        super(name,email);
         this.head_writer = head_writer;
         this.year_formed = year_formed;
     }
@@ -46,5 +46,11 @@ public class Writing_Group extends Authoring_Entity
 
     public void setYear_formed(int year_formed) {
         this.year_formed = year_formed;
+    }
+
+    @Override
+    public String toString(){
+        return ("Writing Group: "+getName() + "\nEmail: "+ getEmail() + "\nHead Writer: " +getHead_writer() + "\nYear" +
+                " Formed: "+ getYear_formed()+"\n");
     }
 }

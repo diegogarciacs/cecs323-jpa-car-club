@@ -58,6 +58,10 @@ public class Books {
         return title;
     }
 
+    public String getAuthoringEntity(){
+        return (authoring_entity.getName());
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -68,5 +72,11 @@ public class Books {
 
     public void setYear_published(int year_published) {
         this.year_published = year_published;
+    }
+
+    @Override
+    public String toString(){
+        return ("IBSN: "+IBSN+"\nTitle: "+title+"\nYear Published: "+year_published+"\n Authoring Entitiy: "+
+                authoring_entity.getName()+"\nPublisher: "+publisher+"\n");
     }
 }

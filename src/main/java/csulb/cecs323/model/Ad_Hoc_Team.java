@@ -22,22 +22,18 @@ public class Ad_Hoc_Team extends Authoring_Entity
         inverseJoinColumns = @JoinColumn(name = "individual_authors_email")
     )
     Set<Individual_Author> authors;
-    private String ad_hoc_team_email;
+
 
     public Ad_Hoc_Team(){};
 
     public Ad_Hoc_Team(String name, String email){
-        super(email,name);
+        super(name,email);
         authors = new HashSet<>();
-    }
-    //Getters and Setters
 
-    public String getAd_hoc_team_email() {
-        return ad_hoc_team_email;
     }
-
-    public void setAd_hoc_team_email(String ad_hoc_teams_email) {
-        this.ad_hoc_team_email = ad_hoc_teams_email;
+    @Override
+    public String toString(){
+        return "Ad Hoc Team Name: " + getName() + "\nAd Hoc Team Email: "+ getEmail()+ "\n";
     }
 
     public void addIndividualAuthors(Individual_Author author){

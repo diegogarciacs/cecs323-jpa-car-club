@@ -53,4 +53,9 @@ public class Publishers {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString(){
+        return ("Publisher name: "+name+ "\nPublishers phone number: "+phone+"\nPublisher email: "+ email+ "\n");
+    }
 }
