@@ -186,15 +186,18 @@ public class JPA_Books {
                }
             }
 
-
          } else if (mainMenuAnswer == 3) {
+            //TODO deletion
             System.out.println("Which book would you like to delete?");
             //make sure book is in database
+
          } else if (mainMenuAnswer == 4) {
+            //TODO book update
             System.out.println("Which book would you like to update?");
 
             //make sure book is in database
          } else if (mainMenuAnswer == 5) {
+            //TODO list primary keys
             listPrimaryKeysMenu();
             int object_answer = getIntRange(1,6);
             listPrimaryKeys(object_answer);
