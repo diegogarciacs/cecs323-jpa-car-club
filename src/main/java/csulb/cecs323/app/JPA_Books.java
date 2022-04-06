@@ -93,21 +93,7 @@ public class JPA_Books {
             } else if (createObjectAnswer == 2) {
                //add individual author
                createIndividualAuthors(individualAuthorsList,adHocTeamsList);
-               if (adHocTeamsList.size() > 0){
-                  System.out.println("Wanna add this author to an ad hoc team?(y/n)");
-                  boolean add = getYesNo();
-                  if (add){
-                     System.out.println("Please choose the ad hoc team you'd like to add this author to. (1 - "+adHocTeamsList.size()+")");
-                     for (int i = 0; i < adHocTeamsList.size();i++){
-                        System.out.println(i+ 1 + ") " +adHocTeamsList.get(i).getName());
-                     }
-                     int teamChoice = getIntRange(1,adHocTeamsList.size());
-                     adHocTeamsList.get(teamChoice-1).addIndividualAuthors(individualAuthorsList.get(individualAuthorsList.size() - 1));
-                     System.out.println("The author has been added to "+ adHocTeamsList.get(teamChoice-1).getName());
-                  }
-               }
 
-               
             } else if (createObjectAnswer == 3) {
                //add ad hoc team
                createAdHocTeam(adHocTeamsList);
@@ -194,11 +180,8 @@ public class JPA_Books {
          } else if (mainMenuAnswer == 4) {
             //
             //TODO book update
-            System.out.println("So you've chosen to update the book authoring. Ok.");
+            System.out.println("So you've chosen to update the book authoring. Very well.");
             updateBookAuthor(booksList,writingGroupsList,adHocTeamsList,individualAuthorsList,publishersList);
-
-
-
 
             //make sure book is in database
          } else if (mainMenuAnswer == 5) {
@@ -424,6 +407,7 @@ public class JPA_Books {
             }
             int adHocTeamChoice = getIntRange(1, adHocTeamsList.size());
             adHocTeamsList.get(adHocTeamChoice-1).addIndividualAuthors(individualAuthors.get(individualAuthors.size()-1));
+            System.out.println("The author has been added to "+ adHocTeamsList.get(adHocTeamChoice-1).getName());
          }
 
       }
