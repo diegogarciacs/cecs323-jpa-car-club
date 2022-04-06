@@ -8,6 +8,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name = "Authoring_Entity_Type",discriminatorType = DiscriminatorType.STRING)
 public abstract class Authoring_Entity {
 
+
     @Column(length = 80, nullable = false)
     private String name;
     @Id
@@ -29,22 +30,27 @@ public abstract class Authoring_Entity {
     }
 
     //Getters and Setters
+
+    /**
+     * Function that returns private name of authoring entity.
+     * @return name of authoring entity.
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Returns name of email associated with authoring entity.
+     * @return string email of authoring entity.
+     */
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    /**
+     * Method that overrides to string of authoring entity.
+     * @return string that displays author and email of authoring entity.
+     */
     @Override
     public String toString(){
         return ("Author: "+getName() + "\nEmail: "+ getEmail()+"\n");

@@ -9,6 +9,11 @@
  *  2018 Alvaro Monge <alvaro.monge@csulb.edu>
  *
  */
+/**
+ * JPA Books Project
+ * April 6th, 2022
+ * Diego O. Garcia, Alexander Weber, Alan Robertson
+ */
 
 package csulb.cecs323.app;
 
@@ -16,8 +21,10 @@ package csulb.cecs323.app;
 import csulb.cecs323.model.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -57,20 +64,19 @@ public class JPA_Books {
    }
 
    public static void main(String[] args) {
-      LOGGER.fine("Creating EntityManagerFactory and EntityManager");
+//      LOGGER.fine("Creating EntityManagerFactory and EntityManager");
+      LOGGER.setLevel(Level.OFF);
       EntityManagerFactory factory = Persistence.createEntityManagerFactory("JPA_Books");
       EntityManager manager = factory.createEntityManager();
       // Create an instance of JPA Books and store our new EntityManager as an instance variable.
       JPA_Books books_manager = new JPA_Books(manager);
-      LOGGER.fine("Begin of Transaction");
+//      LOGGER.fine("Begin of Transaction");
       EntityTransaction tx = manager.getTransaction();
 
-
-      //BEGINNING OF CONSOLE OUTPUT
-      Scanner sc = new Scanner(System.in);
        //Validates user input
       boolean circuit = true;
       while(circuit == true) {
+         LOGGER.setLevel(Level.OFF);
          tx.begin();
          List<Writing_Group> writingGroupsList =
                  manager.createQuery("SELECT w FROM Writing_Group w ", Writing_Group.class).getResultList();
@@ -174,21 +180,19 @@ public class JPA_Books {
          } else if (mainMenuAnswer == 3) {
             //book deletion
             System.out.println("So you've chosen to delete a book. Ok.");
-            deleteBook(manager);
+            deleteBook(manager,booksList);
             //make sure book is in database
 
          } else if (mainMenuAnswer == 4) {
-            //
-            //TODO book update
+            //book update
             System.out.println("So you've chosen to update the book authoring. Very well.");
             updateBookAuthor(booksList,writingGroupsList,adHocTeamsList,individualAuthorsList,publishersList);
 
             //make sure book is in database
          } else if (mainMenuAnswer == 5) {
-            //TODO list primary keys
-            listPrimaryKeysMenu();
-            int object_answer = getIntRange(1,6);
-            listPrimaryKeys(object_answer);
+            primaryKeysMenu();
+            int pkChoice = getIntRange(1,5);
+            displayPrimaryKeys(pkChoice,manager);
          }
          System.out.println("Would you like to keep going? (y/n)");
          circuit = getYesNo();
@@ -200,10 +204,18 @@ public class JPA_Books {
          tx.commit();
       } //end of while loop
 
-      LOGGER.fine("End of Transaction");
+//      LOGGER.fine("End of Transaction");
 
    } // End of the main method
 
+   /**
+    * Function that updates the book objects authoring entity.
+    * @param booksList - List of books currently in database.
+    * @param writingGroupsList - The writing groups currently in the database.
+    * @param adHocTeamsList - The ad hoc teams currently in the database.
+    * @param individualAuthorsList - The individual authors currently in the database.
+    * @param publishersList - The publishers currently in the database.
+    */
    public static void updateBookAuthor(List<Books> booksList, List<Writing_Group> writingGroupsList,
                                        List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList, List<Publishers> publishersList) {
       if (booksList.size() == 0){
@@ -263,7 +275,13 @@ public class JPA_Books {
       }
    }
 
-   public static void deleteBook(EntityManager manager) {
+   /**
+    * Function that deletes a book from the database.
+    * @param manager - Entity manager that is used to remove a book from the database.
+    * @param booksList - Referenced to original queried list in main to also remove the book from so it's not
+    *                  persisted at the end of main.
+    */
+   public static void deleteBook(EntityManager manager, List<Books> booksList) {
       System.out.println("Please input the title of the book (case sensitive).");
       String inputTitle = getString();
       System.out.println("Please input the publisher of the book (case sensitive).");
@@ -279,38 +297,29 @@ public class JPA_Books {
       } else {
          System.out.println("We found it!\nPrepare for deallocation.");
          manager.remove(booksList2.get(0));
-         booksList2.remove(0);
+         booksList.remove(booksList2.get(0));
       }
-//      int bookIndex = -1;
-//      for (int i = 0; i<booksList.size(); i++){
-//         if ((booksList.get(i).getTitle().equalsIgnoreCase(inputTitle))){
-//            bookIndex = i;
-//         }
-//      }
-//      if (bookIndex == -1){
-//         System.out.println("Book not found. Wanna try it again? (y/n)");
-//         boolean restart = getYesNo();
-//         if (restart){
-//            deleteBook(booksList, manager);
-//         }
-//      } else {
-//         System.out.println("Book found!");
-//         System.out.println(booksList.get(bookIndex));
-//         System.out.println("Please confirm if this is the right book please. (y/n)");
-//         boolean deleteConfirm = getYesNo();
-//         if (deleteConfirm){
-//            System.out.println("Great! Preparing for deallocation.");
-//
-//         }
-//      }
-
    }
 
+   /**
+    * Function that creates a book to be persisted into the database.
+    * @param books - Reference to the books list that will be persisted into the database.
+    * @param writingGroupsList - Reference to the writing groups list that will be persisted into the database.
+    * @param adHocTeamsList - Reference to the ad hoc teams list that will be persisted into the database.
+    * @param individualAuthorsList - Reference to the individual authors list that will be persisted into the database.
+    * @param publishersList - Reference to the publishers list that will be persisted into the database.
+    */
    private static void createBook(List<Books> books, List<Writing_Group> writingGroupsList,
                                   List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList,
                                   List<Publishers> publishersList) {
       System.out.println("Please input the IBSN of the book.");
       String IBSN = getString();
+      for (int i = 0; i<books.size(); i++){
+         if (Objects.equals(books.get(i).getIBSN(), IBSN)){
+            System.out.println("There is a primary key violation for book. Try again.");
+            createBook(books, writingGroupsList, adHocTeamsList, individualAuthorsList, publishersList);
+         }
+      }
       System.out.println("Please input the title of the book.");
       String title = getString();
       System.out.println("Please give me the published year of the book.");
@@ -372,10 +381,19 @@ public class JPA_Books {
       books.add(new Books(IBSN,title,yearPublished,tempAE,pb));
    }
 
-
+   /**
+    * Function that creates a publisher to be added to the database.
+    * @param publishersList - Reference to the publisher list to be persisted into the database.
+    */
    private static void createPublisher(List<Publishers> publishersList) {
       System.out.println("Please input the name of the publisher.");
       String name = getString();
+      for (int i = 0; i<publishersList.size(); i++){
+         if (Objects.equals(publishersList.get(i).getName(), name)){
+            System.out.println("There is a primary key violation for publisher. Try again.");
+            createPublisher(publishersList);
+         }
+      }
       System.out.println("Please input the phone number of the publisher.");
       String phone = getString();
       System.out.println("Please input the email of the publisher.");
@@ -383,19 +401,41 @@ public class JPA_Books {
       publishersList.add(new Publishers(name,phone,email));
    }
 
+   /**
+    * Function that creates an ad hoc team to be added to the database.
+    * @param adHocTeams - Reference to the ad hoc team to be persisted into the database.
+    */
    private static void createAdHocTeam(List<Ad_Hoc_Team> adHocTeams) {
       System.out.println("Please input the name of the ad hoc team.");
       String name = getString();
       System.out.println("Please input the email of the ad hoc team.");
       String email = getString();
+      for (int i = 0; i<adHocTeams.size(); i++){
+         if (Objects.equals(adHocTeams.get(i).getEmail(), email)){
+            System.out.println("There is a primary key violation for ad hoc team email. Try again.");
+            createAdHocTeam(adHocTeams);
+         }
+      }
       adHocTeams.add(new Ad_Hoc_Team(name,email));
    }
 
+   /**
+    * Function that creates an individual author to be added into the database.
+    * @param individualAuthors - Reference to the individual author list to be persisted in main after object is added.
+    * @param adHocTeamsList - Reference to the ad hoc teams list to prompt the user to add an author into the ad hoc
+    *                       team if he/she so desires.
+    */
    public static void createIndividualAuthors(List<Individual_Author> individualAuthors, List<Ad_Hoc_Team> adHocTeamsList) {
       System.out.println("Please input the name the individual author.");
       String name = getString();
       System.out.println("Please input the email of the individual author.");
       String email = getString();
+      for (int i = 0; i<individualAuthors.size(); i++){
+         if (Objects.equals(individualAuthors.get(i).getEmail(), email)){
+            System.out.println("There is a primary key violation for individual authors email. Try again.");
+            createIndividualAuthors(individualAuthors, adHocTeamsList);
+         }
+      }
       individualAuthors.add(new Individual_Author(name,email));
       if (adHocTeamsList.size() != 0){
          System.out.println("Would you like to add this author to an ad hoc team? (y/n)");
@@ -436,32 +476,24 @@ public class JPA_Books {
       }
    } // End of createEntity member method
 
+
+
    /**
-    * Think of this as a simple map from a String to an instance of auto_body_styles that has the
-    * same name, as the string that you pass in.  To create a new Cars instance, you need to pass
-    * in an instance of auto_body_styles to satisfy the foreign key constraint, not just a string
-    * representing the name of the style.
-    *
-    * //@param The name of the autobody style that you are looking for.
-    * @return The auto_body_styles instance corresponding to that style name.
+    * This function creates a writing group to be added into the database.
+    * @param writing_group reference to the writing group list initialized in main to be persisted.
     */
-//   public auto_body_styles getStyle (String name) {
-//      // Run the native query that we defined in the auto_body_styles entity to find the right style.
-//      List<auto_body_styles> styles = this.entityManager.createNamedQuery("ReturnAutoBodyStyle",
-//              auto_body_styles.class).setParameter(1, name).getResultList();
-//      if (styles.size() == 0) {
-//         // Invalid style name passed in.
-//         return null;
-//      } else {
-//         // Return the style object that they asked for.
-//         return styles.get(0);
-//      }
-//   }// End of the getStyle method
    public static void createWritingTeam(List<Writing_Group> writing_group){
+
       System.out.println("Please input the name of the writing group.");
       String name = getString();
       System.out.println("Please input the email of the writing group.");
       String email = getString();
+      for (int i = 0; i<writing_group.size(); i++){
+         if (Objects.equals(writing_group.get(i).getEmail(), email)){
+            System.out.println("There is a primary key violation for the writing group email. Try again.");
+            createWritingTeam(writing_group);
+         }
+      }
       System.out.println("Please input the name of the head writer.");
       String headWriter = getString();
       System.out.println("Please input the year that the writing group was formed.");
@@ -496,6 +528,10 @@ public class JPA_Books {
       }
       return input;
    }
+
+   /**
+    * Prints the general menu of choices that is available to the user.
+    */
    public static void printMenu() {
       System.out.println("What would you like to do?");
       System.out.println("1. Add a new object");
@@ -506,7 +542,7 @@ public class JPA_Books {
    }
 
    /**
-    * Displays list of objects to be added to database.
+    * Displays list of objects to be added to the database.
     */
    public static void addNewObjectMenu() {
       System.out.println("What object would you like to add?");
@@ -517,6 +553,9 @@ public class JPA_Books {
               "new book.");
    }
 
+   /**
+    * Menu that displays the objects that a user can list information about.
+    */
    public static void listInformationMenu() {
       System.out.println("Which object would you like to list information about?");
       System.out.println("1. Publisher");
@@ -524,18 +563,23 @@ public class JPA_Books {
       System.out.println("3. Writing Group");
    }
 
-   public static void listPrimaryKeysMenu() {
+   /**
+    * Method that displays the objects that can be chosen to view the primary keys.
+    */
+   public static void primaryKeysMenu() {
       System.out.println("Which primary keys would you like to print?");
-      System.out.println("1. Publishers");
-      System.out.println("2. Books");
-      System.out.println("3. Writing Group");
-      System.out.println("4. Individual Author");
-      System.out.println("5. Ad Hoc Team");
-      System.out.println("6. Ad Hoc Team Member");
+      System.out.println("Authoring Entities:\n1. Writing Group(s).\n2. Individual Author(s).\n3. Ad Hoc Team(s)." +
+              "\nOther Objects:\n4. Publisher(s).\n5. Book(s).");
+
    }
 
-
-
+   /**
+    * Checks if the inputted value is an integer and
+    * within the specified range (ex: 1-10)
+    * @param low lower bound of the range.
+    * @param high upper bound of the range.
+    * @return the valid input.
+    */
    public static int getIntRange( int low, int high ) {
       Scanner in = new Scanner( System.in );
       int input = 0;
@@ -576,27 +620,82 @@ public class JPA_Books {
       return false;
    }
 
+   /**
+    * Function that takes in the choice of object to display the PK and related fields.
+    * @param pkChoice - Choice of object that user would like to display PK related rows.
+    * @param manager - Entity manager to query the database.
+    */
+   public static void displayPrimaryKeys(int pkChoice, EntityManager manager) {
+
+      //query for all necessary groups
+      List<Writing_Group> writingGroupsList =
+              manager.createQuery("SELECT w FROM Writing_Group w ORDER BY w.name ASC", Writing_Group.class).getResultList();
+      List<Individual_Author> individualAuthorsList = manager.createQuery("SELECT ia FROM Individual_Author ia ORDER " +
+                      "BY ia.name ASC",
+              Individual_Author.class).getResultList();
+      List<Ad_Hoc_Team> adHocTeamsList =
+              manager.createQuery("SELECT aT FROM Ad_Hoc_Team aT ORDER BY aT.name ASC", Ad_Hoc_Team.class).getResultList();
+      List<Publishers> publishersList =
+              manager.createQuery("SELECT p FROM Publishers p ORDER BY p.name ASC",Publishers.class).getResultList();
+      List<Books> booksList = manager.createQuery("SELECT b FROM Books b ORDER BY b.title", Books.class).getResultList();
 
 
-
-
-   public static void listPrimaryKeys(int object_answer) {
-
-      if(object_answer == 1){
-         //list primary keys of publishers
-      } else if (object_answer == 2){
-         //list primary keys of books
-      } else if (object_answer== 3){
+      if (pkChoice == 1) {
          //list primary keys of writing groups
-      } else if (object_answer == 4){
-         //list primary keys of individual author
-      } else if (object_answer == 5){
-         //list primary keys of ad hoc teams
-      } else if (object_answer == 6){
-         //list primary keys of ad hoc team members
-      }
-   }//end method
+         if (writingGroupsList.size() == 0){
+            System.out.println("There are no writing group LOL. But the primary keys are associated with the email of" +
+                    " the writing group.");
+         } else {
+            for (int i = 0; i< writingGroupsList.size(); i++){
+               System.out.println(i+1+") "+writingGroupsList.get(i).getEmail() + "\nAuthoring Entity type: Writing " +
+                       "Group.");
+            }
+         }
 
-}// End of CarClub class
+      } else if (pkChoice == 2) {
+         //list primary keys of individual authors
+         if (individualAuthorsList.size() == 0){
+            System.out.println("There are no individual author. But the primary keys are associated with " +
+                    "the email of the individual author.");
+         } else {
+            for (int i = 0; i< individualAuthorsList.size(); i++){
+               System.out.println(i+1+") "+individualAuthorsList.get(i).getEmail() + "\nAuthoring Entity type: " +
+                       "Individual Author.");
+            }
+         }
+      } else if (pkChoice == 3) {
+         //list primary keys of ad hoc teams
+         if (adHocTeamsList.size() == 0){
+            System.out.println("There are no ad hoc teams LOL. But the primary keys are associated with the email of" +
+                    " the ad hoc teams.");
+         } else {
+            for (int i = 0; i< adHocTeamsList.size(); i++){
+               System.out.println(i+1+") "+adHocTeamsList.get(i).getEmail() + "\nAuthoring Entity type: Ad Hoc Team.");
+            }
+         }
+
+      } else if (pkChoice == 4) {
+         //list primary keys of publishers
+         if (publishersList.size() == 0){
+            System.out.println("There are no publishers LOL. But the primary keys are associated with the name of" +
+                    " the publishers.");
+         } else {
+            for (int i = 0; i< publishersList.size(); i++){
+               System.out.println(i+1+") "+publishersList.get(i).getName());
+            }
+         }
+      } else if (pkChoice == 5) {
+         //list primary keys of books
+         if (booksList.size() == 0){
+            System.out.println("There are no books LOL. But the primary keys are associated with the IBSN of" +
+                    " the books.");
+         } else {
+            for (int i = 0; i< booksList.size(); i++){
+               System.out.println(i+1+") IBSN: "+booksList.get(i).getIBSN() + "\nTitle: "+ booksList.get(i).getTitle());
+            }
+         }
+      }//end method
+   }
+}// End of JPABooks class
 
 

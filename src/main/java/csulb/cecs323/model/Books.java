@@ -41,11 +41,11 @@ public class Books {
      *
      * Basic constructor for a book entity.
      *
-     * @param ISBN
-     * @param title
-     * @param year_published
-     * @param authoring_entity
-     * @param publisher
+     * @param ISBN IBSN of book.
+     * @param title title of book.
+     * @param year_published int year of book published.
+     * @param authoring_entity Authoring_entity authoring entity associated with the book
+     * @param publisher Publisher publisher object associated with the book.
      */
     public Books(String ISBN, String title, int year_published, Authoring_Entity authoring_entity, Publishers publisher)
     {
@@ -57,36 +57,41 @@ public class Books {
     }
 
     //Getters and Setters
+
+    /**
+     * Function that returns the IBSN of a book.
+     * @return String IBSN of a book.
+     */
     public String getIBSN() {
         return IBSN;
     }
 
-    public void setIBSN(String IBSN) {
-        this.IBSN = IBSN;
-    }
-
+    /**
+     * Function that returns the title of a book.
+     * @return String title of a book abject.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Function that returns the name of an authoring entity.
+     * @return String representing the name of the authoring entity.
+     */
     public String getAuthoringEntity(){
         return (authoring_entity.getName());
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getYear_published() {
-        return year_published;
-    }
-
-    public void setYear_published(int year_published) {
-        this.year_published = year_published;
-    }
-
+    /**
+     * Function that takes in an authoring entity object and sets the current book to the new one passed in.
+     * @param ae Authoring_Entity to change the book object to.
+     */
     public void setAuthoring_entity(Authoring_Entity ae){this.authoring_entity = ae;}
 
+    /**
+     * Override toString method that prints out relevant bookn information for user.
+     * @return String representing characteristics of a book.
+     */
     @Override
     public String toString(){
         return ("IBSN: "+IBSN+"\nTitle: "+title+"\nYear Published: "+year_published+"\n Authoring Entitiy: "+

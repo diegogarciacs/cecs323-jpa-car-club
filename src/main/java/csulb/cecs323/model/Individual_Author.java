@@ -21,15 +21,15 @@ public class Individual_Author extends Authoring_Entity
 
     @ManyToMany(mappedBy = "authors")
     Set<Ad_Hoc_Team> ad_hoc_teams;
-
+    //Default constructor
     public Individual_Author() {};
 
     /***
      *
      * Basic constructor for an individual author entity.
      *
-     * @param name
-     * @param email
+     * @param name name of author.
+     * @param email email of author.
      */
     public Individual_Author(String name, String email)
     {

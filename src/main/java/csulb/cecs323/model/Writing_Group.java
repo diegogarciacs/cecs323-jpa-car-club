@@ -28,10 +28,10 @@ public class Writing_Group extends Authoring_Entity
      *
      * Basic constructor for a writing group entity.
      *
-     * @param name
-     * @param email
-     * @param head_writer
-     * @param year_formed
+     * @param name string name of writing group.
+     * @param email string email of writing group.
+     * @param head_writer string name of head writer.
+     * @param year_formed int year that writing group was formed.
      */
     public Writing_Group(String name, String email, String head_writer, int year_formed)
     {
@@ -41,22 +41,29 @@ public class Writing_Group extends Authoring_Entity
     }
 
     //Getters and Setters
+
+    /**
+     * Returns the head writer in string format.
+     * @return String head writer name.
+     */
     public String getHead_writer() {
         return head_writer;
     }
 
-    public void setHead_writer(String head_writer) {
-        this.head_writer = head_writer;
-    }
 
+    /**
+     * Returns year formed of writing group.
+     * @return int of year formed of writing group.
+     */
     public int getYear_formed() {
         return year_formed;
     }
 
-    public void setYear_formed(int year_formed) {
-        this.year_formed = year_formed;
-    }
 
+    /**
+     * To string method overriden to print writing groups.
+     * @return string of writing group characteristics.
+     */
     @Override
     public String toString(){
         return ("Writing Group: "+getName() + "\nEmail: "+ getEmail() + "\nHead Writer: " +getHead_writer() + "\nYear" +
