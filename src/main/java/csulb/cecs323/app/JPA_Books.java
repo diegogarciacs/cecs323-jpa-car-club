@@ -221,6 +221,17 @@ public class JPA_Books {
 
    } // End of the main method
 
+   /***
+    *
+    * This function updates the author's book. First, the books list must have a book already in there.
+    * If that requirement is met, then the book can be updated.
+    *
+    * @param booksList
+    * @param writingGroupsList
+    * @param adHocTeamsList
+    * @param individualAuthorsList
+    * @param publishersList
+    */
    public static void updateBookAuthor(List<Books> booksList, List<Writing_Group> writingGroupsList,
                                        List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList, List<Publishers> publishersList) {
       if (booksList.size() == 0){
@@ -231,6 +242,15 @@ public class JPA_Books {
       }
    }
 
+   /***
+    *
+    * This function deletes a book if there is already one in the database
+    * It takes the entity manager as an argument and prompts the user for the book values.
+    * It will check if the book exists. If the book does not exist, an error pops up saying a book is not found.
+    *
+    *
+    * @param manager
+    */
    public static void deleteBook(EntityManager manager) {
       System.out.println("Please input the title of the book (case sensitive).");
       String inputTitle = getString();
@@ -274,6 +294,20 @@ public class JPA_Books {
 
    }
 
+   /***
+    *
+    * This function creates a new book entity.
+    * First, the user is prompted for information regarding a new book.
+    * The user must choose a writing group for that book.
+    * The user must also choose other values that go along with the book.
+    * Then if the book can work, if is committed.
+    *
+    * @param books
+    * @param writingGroupsList
+    * @param adHocTeamsList
+    * @param individualAuthorsList
+    * @param publishersList
+    */
    private static void createBook(List<Books> books, List<Writing_Group> writingGroupsList,
                                   List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList,
                                   List<Publishers> publishersList) {
@@ -341,6 +375,12 @@ public class JPA_Books {
    }
 
 
+   /***
+    *
+    * This function creates a publisher entity.
+    *
+    * @param publishersList
+    */
    private static void createPublisher(List<Publishers> publishersList) {
       System.out.println("Please input the name of the publisher.");
       String name = getString();
@@ -351,6 +391,12 @@ public class JPA_Books {
       publishersList.add(new Publishers(name,phone,email));
    }
 
+   /***
+    *
+    * This function creates an ad hoc team entity.
+    *
+    * @param adHocTeams
+    */
    private static void createAdHocTeam(List<Ad_Hoc_Team> adHocTeams) {
       System.out.println("Please input the name of the ad hoc team.");
       String name = getString();
@@ -359,6 +405,12 @@ public class JPA_Books {
       adHocTeams.add(new Ad_Hoc_Team(name,email));
    }
 
+   /***
+    *
+    * This function creates an Individual Author entity.
+    *
+    * @param individualAuthors
+    */
    private static void createIndividualAuthors(List<Individual_Author> individualAuthors) {
       System.out.println("Please input the name the individual author.");
       String name = getString();
@@ -449,6 +501,12 @@ public class JPA_Books {
       }
       return input;
    }
+
+   /***
+    *
+    * This function prints a main menu.
+    *
+    */
    public static void printMenu() {
       System.out.println("What would you like to do?");
       System.out.println("1. Add a new object");
@@ -470,6 +528,11 @@ public class JPA_Books {
               "new book.");
    }
 
+   /***
+    *
+    * This function lists out an information menu.
+    *
+    */
    public static void listInformationMenu() {
       System.out.println("Which object would you like to list information about?");
       System.out.println("1. Publisher");
@@ -477,6 +540,11 @@ public class JPA_Books {
       System.out.println("3. Writing Group");
    }
 
+   /***
+    *
+    * This function lists primary keys for a given entity.
+    *
+    */
    public static void listPrimaryKeysMenu() {
       System.out.println("Which primary keys would you like to print?");
       System.out.println("1. Publishers");
@@ -488,7 +556,14 @@ public class JPA_Books {
    }
 
 
-
+   /***
+    *
+    * This function returns the integer range of two given values.
+    *
+    * @param low
+    * @param high
+    * @return
+    */
    public static int getIntRange( int low, int high ) {
       Scanner in = new Scanner( System.in );
       int input = 0;
@@ -530,9 +605,12 @@ public class JPA_Books {
    }
 
 
-
-
-
+   /***
+    *
+    * This function lists the primary keys for a given entity.
+    *
+    * @param object_answer
+    */
    public static void listPrimaryKeys(int object_answer) {
 
       if(object_answer == 1){

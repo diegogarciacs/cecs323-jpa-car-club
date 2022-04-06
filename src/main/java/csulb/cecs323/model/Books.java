@@ -36,6 +36,17 @@ public class Books {
     public Books() {}
 
     //Overloaded Constructor
+
+    /***
+     *
+     * Basic constructor for a book entity.
+     *
+     * @param ISBN
+     * @param title
+     * @param year_published
+     * @param authoring_entity
+     * @param publisher
+     */
     public Books(String ISBN, String title, int year_published, Authoring_Entity authoring_entity, Publishers publisher)
     {
         this.IBSN = ISBN;

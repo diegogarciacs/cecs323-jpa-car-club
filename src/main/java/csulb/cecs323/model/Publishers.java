@@ -22,6 +22,15 @@ public class Publishers {
     public Publishers() {};
 
     //Overloaded Constructor
+
+    /***
+     *
+     * Basic constructor for a publisher entity.
+     *
+     * @param name
+     * @param phone
+     * @param email
+     */
     public Publishers(String name, String phone, String email){
         this.name = name;
         this.phone = phone;
