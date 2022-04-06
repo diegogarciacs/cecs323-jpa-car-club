@@ -26,6 +26,13 @@ public class Ad_Hoc_Team extends Authoring_Entity
 
     public Ad_Hoc_Team(){};
 
+    /***
+     *
+     * Basic constructor for Ad Hoc Team.
+     *
+     * @param name
+     * @param email
+     */
     public Ad_Hoc_Team(String name, String email){
         super(name,email);
         authors = new HashSet<>();

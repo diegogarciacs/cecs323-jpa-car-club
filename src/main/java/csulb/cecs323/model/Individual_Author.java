@@ -24,6 +24,13 @@ public class Individual_Author extends Authoring_Entity
 
     public Individual_Author() {};
 
+    /***
+     *
+     * Basic constructor for an individual author entity.
+     *
+     * @param name
+     * @param email
+     */
     public Individual_Author(String name, String email)
     {
         super(name,email);

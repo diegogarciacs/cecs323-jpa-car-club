@@ -15,6 +15,14 @@ public abstract class Authoring_Entity {
     private String email;
 
     public Authoring_Entity(){};
+
+    /***
+     *
+     * Basic constructor for authoring entity.
+     *
+     * @param name
+     * @param email
+     */
     public Authoring_Entity(String name, String email){
         this.name = name;
         this.email = email;

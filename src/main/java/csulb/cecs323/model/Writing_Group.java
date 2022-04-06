@@ -24,6 +24,15 @@ public class Writing_Group extends Authoring_Entity
     //Constructors
     public Writing_Group() {};
 
+    /***
+     *
+     * Basic constructor for a writing group entity.
+     *
+     * @param name
+     * @param email
+     * @param head_writer
+     * @param year_formed
+     */
     public Writing_Group(String name, String email, String head_writer, int year_formed)
     {
         super(name,email);
