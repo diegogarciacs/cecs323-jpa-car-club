@@ -80,9 +80,8 @@ public class JPA_Books {
                  manager.createQuery("SELECT aT FROM Ad_Hoc_Team aT", Ad_Hoc_Team.class).getResultList();
          List<Publishers> publishersList =
                  manager.createQuery("SELECT p FROM Publishers p",Publishers.class).getResultList();
-         printMenu();
          List<Books> booksList = manager.createQuery("SELECT b FROM Books b", Books.class).getResultList();
-
+         printMenu();
          int mainMenuAnswer = getIntRange(1,5);
          if (mainMenuAnswer == 1) {
             addNewObjectMenu();
@@ -187,13 +186,19 @@ public class JPA_Books {
             }
 
          } else if (mainMenuAnswer == 3) {
-            //TODO deletion
-            System.out.println("Which book would you like to delete?");
+            //book deletion
+            System.out.println("So you've chosen to delete a book. Ok.");
+            deleteBook(manager);
             //make sure book is in database
 
          } else if (mainMenuAnswer == 4) {
+            //
             //TODO book update
-            System.out.println("Which book would you like to update?");
+            System.out.println("So you've chosen to update the book authoring. Ok.");
+            updateBookAuthor(booksList,writingGroupsList,adHocTeamsList,individualAuthorsList,publishersList);
+
+
+
 
             //make sure book is in database
          } else if (mainMenuAnswer == 5) {
@@ -215,6 +220,59 @@ public class JPA_Books {
       LOGGER.fine("End of Transaction");
 
    } // End of the main method
+
+   public static void updateBookAuthor(List<Books> booksList, List<Writing_Group> writingGroupsList,
+                                       List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList, List<Publishers> publishersList) {
+      if (booksList.size() == 0){
+         System.out.println("Whoops. You have no books. Please create one.");
+         createBook(booksList,writingGroupsList,adHocTeamsList,individualAuthorsList,publishersList);
+      } else {
+
+      }
+   }
+
+   public static void deleteBook(EntityManager manager) {
+      System.out.println("Please input the title of the book (case sensitive).");
+      String inputTitle = getString();
+      System.out.println("Please input the publisher of the book (case sensitive).");
+      String inputPublisher = getString();
+      List<Books> booksList2 =
+              manager.createQuery("SELECT b FROM Books b WHERE (b.title LIKE :inputTitle) and (b.publisher.name LIKE " +
+                              ":inputPublisher)",
+                      Books.class).setParameter(
+                      "inputTitle",
+                      inputTitle).setParameter("inputPublisher",inputPublisher).getResultList();
+      if (booksList2.size() == 0){
+         System.out.println("Book not found! Please try again.");
+      } else {
+         System.out.println("We found it!\nPrepare for deallocation.");
+         manager.remove(booksList2.get(0));
+         booksList2.remove(0);
+      }
+//      int bookIndex = -1;
+//      for (int i = 0; i<booksList.size(); i++){
+//         if ((booksList.get(i).getTitle().equalsIgnoreCase(inputTitle))){
+//            bookIndex = i;
+//         }
+//      }
+//      if (bookIndex == -1){
+//         System.out.println("Book not found. Wanna try it again? (y/n)");
+//         boolean restart = getYesNo();
+//         if (restart){
+//            deleteBook(booksList, manager);
+//         }
+//      } else {
+//         System.out.println("Book found!");
+//         System.out.println(booksList.get(bookIndex));
+//         System.out.println("Please confirm if this is the right book please. (y/n)");
+//         boolean deleteConfirm = getYesNo();
+//         if (deleteConfirm){
+//            System.out.println("Great! Preparing for deallocation.");
+//
+//         }
+//      }
+
+   }
 
    private static void createBook(List<Books> books, List<Writing_Group> writingGroupsList,
                                   List<Ad_Hoc_Team> adHocTeamsList, List<Individual_Author> individualAuthorsList,

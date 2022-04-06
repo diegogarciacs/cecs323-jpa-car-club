@@ -74,6 +74,8 @@ public class Books {
         this.year_published = year_published;
     }
 
+    public void setAuthoring_entity(Authoring_Entity ae){this.authoring_entity = ae;}
+
     @Override
     public String toString(){
         return ("IBSN: "+IBSN+"\nTitle: "+title+"\nYear Published: "+year_published+"\n Authoring Entitiy: "+
