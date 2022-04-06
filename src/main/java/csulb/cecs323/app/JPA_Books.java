@@ -92,7 +92,7 @@ public class JPA_Books {
                
             } else if (createObjectAnswer == 2) {
                //add individual author
-               createIndividualAuthors(individualAuthorsList);
+               createIndividualAuthors(individualAuthorsList,adHocTeamsList);
                if (adHocTeamsList.size() > 0){
                   System.out.println("Wanna add this author to an ad hoc team?(y/n)");
                   boolean add = getYesNo();
@@ -227,7 +227,56 @@ public class JPA_Books {
          System.out.println("Whoops. You have no books. Please create one.");
          createBook(booksList,writingGroupsList,adHocTeamsList,individualAuthorsList,publishersList);
       } else {
-
+         System.out.println("Please input which book you'd like to update.");
+         for (int i = 0; i < booksList.size(); i++){
+            System.out.println(i+1+") "+booksList.get(i).getTitle() + " - Authoring Entity: " + booksList.get(i).getAuthoringEntity());
+         }
+         int bookChoice = getIntRange(1, booksList.size());
+         System.out.println("Now, tell me what authoring entity you'd like to update this book to.\n1. Writing Group\n2. Individual Author\n3. Ad Hoc Team");
+         int authoringChoice = getIntRange(1,3);
+         //create authoring entity object
+         Authoring_Entity tempAE = null;
+         if (authoringChoice == 1){
+            //Writing group
+            while (writingGroupsList.size() == 0){
+               System.out.println("There is no writing group. You're gonna have to create one.");
+               createWritingTeam(writingGroupsList);
+            }
+            System.out.println("Please choose a writing group for this book. (1 - "+writingGroupsList.size()+
+                    ")");
+            for (int i = 0; i< writingGroupsList.size(); i++){
+               System.out.println(i + 1 +") "+ writingGroupsList.get(i).getName());
+            }
+            int writingGroupChoice = getIntRange(1, writingGroupsList.size());
+            tempAE = writingGroupsList.get(writingGroupChoice - 1);
+            booksList.get(bookChoice - 1).setAuthoring_entity(tempAE);
+         } else if (authoringChoice == 2) {
+            while (individualAuthorsList.size() == 0){
+               // Individual Author
+               System.out.println("There is no individual author. You're gonna have to create one.");
+               createIndividualAuthors(individualAuthorsList, adHocTeamsList);
+            }
+            System.out.println("Please choose an individual author for this book.");
+            for (int i = 0; i< individualAuthorsList.size(); i++){
+               System.out.println(i + 1 +") "+ individualAuthorsList.get(i).getName());
+            }
+            int individualAuthorChoice = getIntRange(1, individualAuthorsList.size());
+            tempAE = individualAuthorsList.get(individualAuthorChoice - 1);
+            booksList.get(bookChoice - 1).setAuthoring_entity(tempAE);
+         } else if (authoringChoice == 3){
+            //add hoc team
+            while (adHocTeamsList.size() == 0){
+               System.out.println("There is no ad hoc team. You're gonna have to create one.");
+               createAdHocTeam(adHocTeamsList);
+            }
+            System.out.println("Please choose an ad hoc team for this book.");
+            for (int i = 0; i< adHocTeamsList.size(); i++){
+               System.out.println(i + 1 +") "+ adHocTeamsList.get(i).getName());
+            }
+            int adHocTeamChoice = getIntRange(1, adHocTeamsList.size());
+            tempAE = adHocTeamsList.get(adHocTeamChoice - 1);
+            booksList.get(bookChoice - 1).setAuthoring_entity(tempAE);
+         }
       }
    }
 
@@ -305,7 +354,7 @@ public class JPA_Books {
          while (individualAuthorsList.size() == 0){
             // Individual Author
             System.out.println("There is no individual author. You're gonna have to create one.");
-            createIndividualAuthors(individualAuthorsList);
+            createIndividualAuthors(individualAuthorsList, adHocTeamsList);
          }
          System.out.println("Please choose an individual author that authored this book.");
          for (int i = 0; i< individualAuthorsList.size(); i++){
@@ -359,12 +408,26 @@ public class JPA_Books {
       adHocTeams.add(new Ad_Hoc_Team(name,email));
    }
 
-   private static void createIndividualAuthors(List<Individual_Author> individualAuthors) {
+   public static void createIndividualAuthors(List<Individual_Author> individualAuthors, List<Ad_Hoc_Team> adHocTeamsList) {
       System.out.println("Please input the name the individual author.");
       String name = getString();
       System.out.println("Please input the email of the individual author.");
       String email = getString();
       individualAuthors.add(new Individual_Author(name,email));
+      if (adHocTeamsList.size() != 0){
+         System.out.println("Would you like to add this author to an ad hoc team? (y/n)");
+         boolean choice = getYesNo();
+         if (choice){
+            System.out.println("Very well. Please choose an ad hoc team.");
+            for (int i = 0; i< adHocTeamsList.size(); i++){
+               System.out.println(i + 1 +") "+ adHocTeamsList.get(i).getName());
+            }
+            int adHocTeamChoice = getIntRange(1, adHocTeamsList.size());
+            adHocTeamsList.get(adHocTeamChoice-1).addIndividualAuthors(individualAuthors.get(individualAuthors.size()-1));
+         }
+
+      }
+
    }
 
    /**
